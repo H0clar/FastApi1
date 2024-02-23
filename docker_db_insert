@@ -1,0 +1,67 @@
+
+
+
+
+#crear el contenedor de docker:
+docker run --name fastapi -e POSTGRES_PASSWORD=123456789 -p 5432:5432 -d postgres
+
+
+#copiar el script al contenedor pa crear las tablas y para insertar datos
+
+docker cp init.sql fastapi:/create_products.sql
+
+docker cp insert.sql fastapi:/insert_products.sql
+
+
+
+
+
+#ejecutar el SQL en el contenedor
+
+docker exec -it fastapi bash
+
+
+
+#conectarse a la db
+
+psql -U postgres
+
+
+#ejecuta el sql:
+
+\i /create_products.sql
+\i /insert_products.sql
+
+
+salir:
+
+\q
+exit
+
+
+
+#para revisar ejecuta una consulta
+
+
+docker exec -it fastapi bash
+
+psql -U postgres
+
+Select * from products;
+
+\q
+exit
+
+
+
+
+#creacion del proyecto fastapi
+
+#instalar dependencias:
+pip install fastapi uvicorn
+pip install asyncpg
+
+
+
+para levantar el proyecto:
+uvicorn main:app --reload
